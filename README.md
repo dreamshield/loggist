@@ -47,7 +47,7 @@ go get -u github.com/dreamshield/loggist
 Issues
 ---------------
 
-Feel free to push issues that could make Seelog better:https://github.com/dreamshield/loggist/issues 
+Feel free to push issues that could make Loggist better:https://github.com/dreamshield/loggist/issues 
 
 Changelog
 ---------------
