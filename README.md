@@ -20,7 +20,7 @@ Quick-start
 ```go
 package main
 
-import log "github.com/dreamshield/loggist"
+import "github.com/dreamshield/loggist"
 
 func main() {
 	logger := loggist.NewLoggist(loggist.MODE_FILE, loggist.RECORD_MODE_YMDH)
