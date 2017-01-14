@@ -29,6 +29,24 @@ func mkDir(fileName string) {
 	}
 }
 
+// create file
+func createFile(fileName string) (fd *os.File, err error) {
+	fd, err = os.OpenFile(fileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE|os.O_SYNC, 0644)
+	if err != nil {
+		if os.IsPermission(err) {
+			return nil, err
+		}
+		if os.IsNotExist(err) {
+			mkDir(fileName)
+		}
+		fd, err = os.OpenFile(fileName, os.O_CREATE|os.O_RDWR|os.O_APPEND|os.O_SYNC, 0664)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return fd, err
+}
+
 // generate log content
 func generateLogContent(level LogLevel, pos int, format string, v ...interface{}) string {
 	deepNum := int(pos) + 2

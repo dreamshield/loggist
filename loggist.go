@@ -43,11 +43,12 @@ func NewLoggist(mode LogMode, recordMode LogRecordMode) *Loggist {
 
 // Loggist defination
 type Loggist struct {
-	posision   int
-	logger     *log.Logger
-	mode       LogMode
-	recordMode LogRecordMode
-	conf       *LogConf
+	posision    int
+	logger      *log.Logger
+	mode        LogMode
+	recordMode  LogRecordMode
+	conf        *LogConf
+	fileHandler *os.File
 }
 
 // return the current invoke position
@@ -123,22 +124,26 @@ func (self *Loggist) dealConsoleMode(content string) {
 // log file mode
 func (self *Loggist) dealFileMode(content string) {
 	fileName := self.genFullFileName()
-	fd, err := os.OpenFile(fileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE|os.O_SYNC, 0644)
-	if err != nil {
-		if os.IsPermission(err) {
-			panic(err)
-		}
-		if os.IsNotExist(err) {
-			mkDir(fileName)
-		}
-		fd, err = os.OpenFile(fileName, os.O_CREATE|os.O_RDWR|os.O_APPEND|os.O_SYNC, 0664)
+	// check whether the file handle is nil or not
+	if self.fileHandler == nil {
+		fd, err := createFile(fileName)
 		if err != nil {
 			panic(err)
 		}
+		self.fileHandler = fd
+	} else {
+		if _, err := os.Stat(fileName); err != nil {
+			fd, err := createFile(fileName)
+			if err != nil {
+				panic(err)
+			}
+			oldFd := self.fileHandler
+			oldFd.Close()
+			self.fileHandler = fd
+		}
 	}
-	self.logger.SetOutput(fd)
+	self.logger.SetOutput(self.fileHandler)
 	self.logger.Print(content)
-	defer fd.Close()
 }
 
 // generate log file name and log store path as full file Name

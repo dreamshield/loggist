@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Loggist version="1.0">
-    <LogRoot>./Logs</LogRoot>
+    <LogRoot>./logs</LogRoot>
     <LogFormat>
         <Mode fileFmt="%04d%02d" subLogDir="%04d"/>
         <Mode fileFmt="%04d%02d%02d" subLogDir="%04d%02d"/>

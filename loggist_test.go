@@ -1,6 +1,9 @@
 package loggist
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 // define test level for testing
 var levelKeys []string = []string{INFO_LOG_KEY, DEBUG_LOG_KEY, WARN_LOG_KEY, ERROR_LOG_KEY, FATAL_LOG_KEY}
@@ -33,6 +36,26 @@ func TestLevel(t *testing.T) {
 
 func outputTagInfo(tmp LogLevel, t *testing.T) {
 	t.Logf("level = %s prefix = %s", tmp.getLevelName(), tmp.getLevelPrefix())
+}
+
+// test holding the same file handler
+func TestFileHandler(t *testing.T) {
+	var format string
+	var contentString string
+	var contentNum int
+	fl := NewLoggist(MODE_FILE, RECORD_MODE_YMDHM)
+
+	var ticker *time.Ticker = time.NewTicker(1 * time.Second)
+	go func() {
+		for t := range ticker.C {
+			format = "string=%s,num=%d,time=%v"
+			contentString = "Infof"
+			contentNum = 12345
+			fl.Infof(format, contentString, contentNum, t)
+		}
+	}()
+	time.Sleep(time.Minute * 5) //阻塞，则执行次数为sleep的休眠时间/ticker的时间
+	ticker.Stop()
 }
 
 // different log level test
