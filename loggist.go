@@ -107,7 +107,7 @@ func (self *Loggist) write(content string) {
 	// different mode for different dealway
 	switch mode {
 	case MODE_FILE:
-		self.dealFileMode(content)
+		go self.dealFileMode(content)
 	case MODE_CONSOLE:
 		self.dealConsoleMode(content)
 	default:
